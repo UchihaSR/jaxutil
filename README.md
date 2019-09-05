@@ -30,9 +30,9 @@ optimizer = optimizers.Adam()(network)
 optimizer, network = optimizer.step(network, loss_fn)
 ```
 
-## distributions
+## kerax.distributions
 
-TODO: Basic distributions and bijectors.
+The distributions module implements basic support for distributions and bijectors.
 
 ## rl
 
