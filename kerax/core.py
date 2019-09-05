@@ -80,7 +80,7 @@ class PyTreeFactory(object):
         Factory.__name__ = 'PyTreeFactory'+self.__class__.__name__
         self._factory = Factory
 
-    @abs.abstractmethod
+    @abc.abstractmethod
     def __pytreefields__(self):
         """Return a list of (string) field names."""
 

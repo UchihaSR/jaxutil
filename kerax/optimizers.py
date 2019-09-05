@@ -74,12 +74,12 @@ class Adam(GradientOptimizer):
 
     @classmethod
     def __pytreefields__(cls):
-        return ['step', 'm', 'v']
+        return ['steps', 'm', 'v']
 
     def initialize(self, param):
         m0 = np.zeros_like(param)
         v0 = np.zeros_like(param)
-        return self.build_node(step=0, m=m0, v=v0)
+        return self.build_node(steps=0, m=m0, v=v0)
 
     def step_flattened(self, state, param, grad):
         step, m, v = state
@@ -88,7 +88,7 @@ class Adam(GradientOptimizer):
         mhat = m / (1 - self.b1**(step + 1))  # Bias correction.
         vhat = v / (1 - self.b2**(step + 1))
         param = param - self.lr * mhat / (np.sqrt(vhat) + self.eps)
-        return param, self.build_node(step=step + 1, m=m, v=v)
+        return param, self.build_node(steps=step + 1, m=m, v=v)
 
 
 class GradientDescent(GradientOptimizer):

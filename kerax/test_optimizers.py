@@ -21,37 +21,38 @@ class AdamTest(unittest.TestCase):
     def test_learn_identity(self):
         rng = random.PRNGKey(0)
         Network = module.Sequential([
-            module.Dense(16),
-            module.Relu(),
             module.Dense(2),
         ])
         network = Network(rng, (-1, 2))
 
-        Optimizer = optimizers.Adam(lr=1e-1)
+        Optimizer = optimizers.Adam(lr=5e-1)
         optimizer = Optimizer(network)
 
-        x0 = np.array([[1.0, 1.0], [0.5, 1.0], [3.0, 0.5]])
+        x0 = np.array([[1.0, 1.0], [5.0, 0.0], [0.0, 5.0]])
 
         initial_loss = reconstruct_loss(network, x0)
         for _ in range(50):
             optimizer, network = optimizer.step(network, functools.partial(reconstruct_loss, x=x0))
-            loss = reconstruct_loss(network, x0)
+        loss = reconstruct_loss(network, x0)
         final_loss = loss
         self.assertLess(final_loss, initial_loss)
-        self.assertLess(final_loss, 0.01)
+        self.assertLess(final_loss, 0.02)
 
     def test_step(self):
         params = np.array([1.0, 1.5])
         grads = np.array([0.5, 0.5])
 
-        optimizer = optimizers.Adam(lr=1.0)(params)
+        optimizer_def = optimizers.Adam(lr=1.0)
+        optimizer = optimizer_def(params)
 
-        new_state, new_params = optimizer.step_flattened(params, grads)
+        new_params, new_state = optimizers.Adam.step_flattened(optimizer_def, optimizer, params, grads)
         self.assertTrue(np.allclose(new_params, np.array([0.0, 0.5])))
 
-        optimizer = optimizers.Adam(lr=0.0)(params)
-        new_state, new_params = optimizer.step_flattened(params, grads)
-        self.assertTrue(np.allclose(new_params, np.array([1.0, 2.0])))
+        optimizer_def = optimizers.Adam(lr=0.0)
+        optimizer = optimizer_def(params)
+
+        new_params, new_state = optimizers.Adam.step_flattened(optimizer_def, optimizer, params, grads)
+        self.assertTrue(np.allclose(new_params, np.array([1.0, 1.5])))
 
 
 if __name__ == '__main__':
