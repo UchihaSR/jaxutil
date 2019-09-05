@@ -1,0 +1,3 @@
+[run]
+source=kerax/
+omit = */test*.py
