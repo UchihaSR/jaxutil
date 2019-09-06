@@ -21,6 +21,13 @@ class NetworksTest(unittest.TestCase):
         output = network(np.ones([7, din]))
         self.assertEqual(output.shape, (7, dout))
 
+    def test_flatten_feedforward_shape_output(self):
+        din = 6
+        dout = 5
+        network = networks.FlattenNet(networks.Feedforward(dout, layers=(4,4,4)))(random.PRNGKey(0), input_shape=(-1, din))
+        output = network(np.ones([7, 3]), np.ones([7, din-3]))
+        self.assertEqual(output.shape, (7, dout))
+
 
 if __name__ == '__main__':
     unittest.main()

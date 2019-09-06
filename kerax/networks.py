@@ -30,7 +30,7 @@ class Feedforward(module.Module):
         return self.network.forward(params.network, inputs)
 
 
-class FlattenNet(Feedforward):
+class FlattenNet(module.Module):
     """A network which concatenates inputs before feeding into a network."""
 
     def __init__(self, network_def):
